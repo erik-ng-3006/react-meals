@@ -1,5 +1,5 @@
-import React, { useReducer } from "react";
-import CartContext from "./cart-context";
+import React, { useReducer } from 'react';
+import CartContext from './cart-context';
 
 const defaultCartState = {
 	items: [],
@@ -7,7 +7,7 @@ const defaultCartState = {
 };
 
 const cartReducer = (state, action) => {
-	if (action.type === "ADD") {
+	if (action.type === 'ADD') {
 		const updatedTotalAmount =
 			state.totalAmount + action.item.price * action.item.amount;
 
@@ -33,7 +33,7 @@ const cartReducer = (state, action) => {
 			totalAmount: updatedTotalAmount,
 		};
 	}
-	if (action.type === "REMOVE") {
+	if (action.type === 'REMOVE') {
 		const existingItemIndex = state.items.findIndex(
 			(item) => item.id === action.id
 		);
@@ -54,6 +54,9 @@ const cartReducer = (state, action) => {
 			items: updatedItems,
 			totalAmount: updatedTotalAmount,
 		};
+	}
+	if (action.type === 'CLEAR') {
+		return defaultCartState;
 	} else {
 		return defaultCartState;
 	}
@@ -67,14 +70,19 @@ const CartProvider = (props) => {
 
 	const addItemToCartHandler = (item) => {
 		dispatchCartState({
-			type: "ADD",
+			type: 'ADD',
 			item: item,
+		});
+	};
+	const clearCartHandler = () => {
+		dispatchCartState({
+			type: 'CLEAR',
 		});
 	};
 
 	const removeItemFromCartHandler = (id) => {
 		dispatchCartState({
-			type: "REMOVE",
+			type: 'REMOVE',
 			id: id,
 		});
 	};
@@ -84,6 +92,7 @@ const CartProvider = (props) => {
 		totalAmount: cartState.totalAmount,
 		addItem: addItemToCartHandler,
 		removeItem: removeItemFromCartHandler,
+		clearCart: clearCartHandler,
 	};
 
 	return (
